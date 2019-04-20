@@ -10,9 +10,14 @@ var steakhouseSchema = new Schema({
 
 var Steakhouses = mongoose.model('steakhouses', steakhouseSchema)
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.get('/steakhouses', function(req, res, next) {
+  Steakhouses.find(
+    {}
+  ).then(steakhousesFound => {
+    res.send(JSON.stringify(
+      steakhousesFound
+    ));
+  });
+})
 
 module.exports = router;

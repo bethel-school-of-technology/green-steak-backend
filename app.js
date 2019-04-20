@@ -13,7 +13,7 @@ var app = express();
 
 //TO CONNECT MONGODB 
 const uri = "mongodb+srv://application:ksNwA9NnUySKuFtj@greensteak-c0hau.mongodb.net/test?retryWrites=true"
-mongoose.connect(uri, {dbname: 'greensteak'});
+mongoose.connect(uri, {dbName: 'greensteak'});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
