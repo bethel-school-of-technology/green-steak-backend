@@ -1,21 +1,14 @@
 var express = require('express');
 var router = express.Router();
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
+//import providers (they execute queries and perform logic)
+var steakhousesProvider = require('../providers/steakhouses').steakhousesProvider
 
-var Schema = mongoose.Schema
-var steakhouseSchema = new Schema({
-  id: Number,
-  name: String
-})
-
-var Steakhouses = mongoose.model('steakhouses', steakhouseSchema)
-
+//routing (passes data from providers to the front-end)
 router.get('/steakhouses', function(req, res, next) {
-  Steakhouses.find(
-    {}
-  ).then(steakhousesFound => {
+  steakhousesProvider.findAll(function(error, steakhouses){
     res.send(JSON.stringify(
-      steakhousesFound
+      steakhouses
     ));
   });
 })
