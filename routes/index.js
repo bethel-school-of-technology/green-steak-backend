@@ -13,4 +13,14 @@ router.get('/steakhouses', function(req, res, next) {
   });
 })
 
+router.post('/googlemapsapiupload', function(req, res, next) {
+  var googleData = {
+    //figure out how to pass data from api to backend, and how to format it (loop?)
+  }
+
+  steakhousesProvider.addGoogleData(googleData, function(err, dataAmountAdded) {
+    console.log(dataAmountAdded.n + " data has been submitted, " + dataAmountAdded.nModified + " data has been saved.");
+  })
+})
+
 module.exports = router;
