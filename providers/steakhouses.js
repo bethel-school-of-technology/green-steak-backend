@@ -19,7 +19,7 @@ class steakhousesProvider {
 
   //find all steakhouses
   static findAll(callback) {
-    Steakhouses.find({}, "name", function(err, steakhouses) {
+    Steakhouses.find({}, {name:1, coordinates:1}, function(err, steakhouses) {
       callback(null, steakhouses);
     });
   }
