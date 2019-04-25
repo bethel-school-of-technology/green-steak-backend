@@ -27,10 +27,10 @@ class steakhousesProvider {
   //add steakhouses from maps API
   static addGoogleData(googleData, callback) {
     console.log(googleData.length + " steakhouses submitted to the database");
-    for (var i = 0; i < googleData.length; i++) {
-      var lat = googleData[i].coordinates.latitude;
-      var long = googleData[i].coordinates.longitude;
-      var steakhname = googleData[i].name;
+    Array.from(googleData).forEach(steakhouse => {
+      var lat = steakhouse.coordinates.latitude;
+      var long = steakhouse.coordinates.longitude;
+      var steakhname = steakhouse.name;
       Steakhouses.findOne(
         {
           coordinates: {
@@ -58,7 +58,7 @@ class steakhousesProvider {
           }
         }
       );
-    }
+    });
     callback(null);
   }
 }
