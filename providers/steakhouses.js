@@ -11,7 +11,7 @@ var steakhouseSchema = new Schema({
   }
 });
 
-var Steakhouses = mongoose.model("steakhouses", steakhouseSchema);
+var Steakhouses = mongoose.model("steakhouses", steakhouseSchema, "steakhouses");
 
 //queries and logic
 class steakhousesProvider {
@@ -61,6 +61,6 @@ class steakhousesProvider {
     });
     callback(null);
   }
-}
+};
 
 exports.steakhousesProvider = steakhousesProvider;
