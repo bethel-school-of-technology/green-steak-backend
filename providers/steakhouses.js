@@ -25,7 +25,8 @@ class steakhousesProvider {
   }
 
   //add steakhouses from maps API
-  static addGoogleData(googleData, callback) {
+  static addGoogleData(rawGoogleData, callback) {
+    var googleData = JSON.parse(rawGoogleData.steakhouses)
     console.log(googleData.length + " steakhouses submitted to the database");
     Array.from(googleData).forEach(steakhouse => {
       var lat = steakhouse.coordinates.latitude;

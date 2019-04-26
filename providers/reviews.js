@@ -38,7 +38,8 @@ class reviewsProvider {
     return timestamp;
   }
 
-  static submitReview(formData, callback) {
+  static submitReview(rawFormData, callback) {
+    var formData = JSON.parse(rawFormData.review)
     var identifier = formData.identifier;
     var commentText = formData.comment;
     var user = formData.username;
