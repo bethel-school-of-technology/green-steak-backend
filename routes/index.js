@@ -24,7 +24,7 @@ router.post("/submitreview", function(req, res, next) {
   var formData = req.body;
   reviewsProvider.submitReview(formData, function(err) {
     // res.send("review saved");
-    res.send("not yet implemented")
+    res.send("review saved")
   });
 });
 
