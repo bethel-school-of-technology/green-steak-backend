@@ -11,7 +11,7 @@ var steakhouseSchema = new Schema({
   }
 });
 
-var Steakhouses = mongoose.model("steakhouses", steakhouseSchema);
+var Steakhouses = mongoose.model("steakhouses", steakhouseSchema, "steakhouses");
 
 //queries and logic
 class steakhousesProvider {
@@ -25,7 +25,8 @@ class steakhousesProvider {
   }
 
   //add steakhouses from maps API
-  static addGoogleData(googleData, callback) {
+  static addGoogleData(rawGoogleData, callback) {
+    var googleData = JSON.parse(rawGoogleData.steakhouses)
     console.log(googleData.length + " steakhouses submitted to the database");
     Array.from(googleData).forEach(steakhouse => {
       var lat = steakhouse.coordinates.latitude;
@@ -61,6 +62,6 @@ class steakhousesProvider {
     });
     callback(null);
   }
-}
+};
 
 exports.steakhousesProvider = steakhousesProvider;
