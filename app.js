@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 
@@ -12,8 +13,8 @@ var mongoose = require('mongoose');
 var app = express();
 
 //TO CONNECT MONGODB 
-const uri = "mongodb+srv://application:ksNwA9NnUySKuFtj@greensteak-c0hau.mongodb.net/test?retryWrites=true"
-mongoose.connect(uri, {dbName: 'greensteak', useNewUrlParser: true});
+const uri = process.env.DB_URI
+mongoose.connect(uri, {dbName: process.env.DB_NAME, useNewUrlParser: true});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {

@@ -14,7 +14,7 @@ var steakhouseSchema = new Schema({
 var Steakhouses = mongoose.model("steakhouses", steakhouseSchema, "steakhouses");
 
 //queries and logic
-class steakhousesProvider {
+class steakhousesService {
   constructor() {}
 
   //find all steakhouses
@@ -64,4 +64,4 @@ class steakhousesProvider {
   }
 };
 
-exports.steakhousesProvider = steakhousesProvider;
+exports.steakhousesService = steakhousesService;

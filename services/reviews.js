@@ -20,7 +20,7 @@ var reviewSchema = new Schema({
 var Reviews = mongoose.model("reviews", reviewSchema, "reviews");
 
 //queries and logic
-class reviewsProvider {
+class reviewsService {
   static createTimestamp() {
     var today = new Date();
     var timestamp =
@@ -66,4 +66,4 @@ class reviewsProvider {
   }
 }
 
-exports.reviewsProvider = reviewsProvider;
+exports.reviewsService = reviewsService;
