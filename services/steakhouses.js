@@ -1,19 +1,7 @@
 "use strict";
 var mongoose = require("mongoose");
+var Steakhouses = require("../models/steakhouses");
 
-//schema and model
-var Schema = mongoose.Schema;
-var steakhouseSchema = new Schema({
-  name: String,
-  coordinates: {
-    latitude: String,
-    longitude: String
-  }
-});
-
-var Steakhouses = mongoose.model("steakhouses", steakhouseSchema, "steakhouses");
-
-//queries and logic
 class steakhousesService {
   constructor() {}
 

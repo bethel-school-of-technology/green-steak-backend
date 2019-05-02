@@ -1,25 +1,7 @@
 "use strict";
 var mongoose = require("mongoose");
+var Reviews = require("../models/reviews");
 
-//schema and model
-var Schema = mongoose.Schema;
-var reviewSchema = new Schema({
-  identifier: {
-    latitude: String,
-    longitude: String
-  },
-  comment: String,
-  username: String,
-  value: Number,
-  quality: Number,
-  meta: {
-    timestamp: Date
-  }
-});
-
-var Reviews = mongoose.model("reviews", reviewSchema, "reviews");
-
-//queries and logic
 class reviewsService {
   static createTimestamp() {
     var today = new Date();
