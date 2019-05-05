@@ -9,7 +9,7 @@ var userSchema = new Schema({
     password: String
 });
 
-userSchema.plugin(passportLocalMongoose);
+// userSchema.plugin(passportLocalMongoose);
 var Users = mongoose.model("user", userSchema);
 
 module.exports = Users;

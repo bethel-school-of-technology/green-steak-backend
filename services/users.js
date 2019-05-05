@@ -3,8 +3,8 @@ var mongoose = require("mongoose");
 var Users = require("../models/users");
 
 class usersService {
-  static signup(rawSignupFormData, callback) {
-    var signupFormData = JSON.parse(rawSignupFormData.data);
+  static signup(signupFormData, callback) {
+    console.log(signupFormData);
     Users.findOne(
       {
         email: signupFormData.email
@@ -17,23 +17,19 @@ class usersService {
             name: signupFormData.name,
             password: signupFormData.password
           });
-          newAccount.save(function(err) {
-            var result = "Registered";
-            callback(null, result);
-            return;
+          newAccount.save().then(() => {
+            callback(null, "Registered");
           });
-          return result;
+          return;
         } else {
-          var result = "Email already registered";
-          callback(null, result);
+          callback(null, "Email already registered");
           return;
         }
       }
     );
   }
 
-  static login(rawLoginFormData, callback) {
-    var loginFormData = JSON.parse(rawLoginFormData.data);
+  static login(loginFormData, callback) {
     Users.findOne(
       {
         email: loginFormData.email

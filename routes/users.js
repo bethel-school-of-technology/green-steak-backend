@@ -6,6 +6,7 @@ var usersService = require("../services/users").usersService;
 router.post("/register", function(req, res, next) {
   var formdata = req.body;
   usersService.signup(formdata, function(err, result) {
+    console.log(result);
     res.send(result);
   });
 });

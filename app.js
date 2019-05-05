@@ -54,9 +54,9 @@ app.use('/api', indexRouter);
 app.use('/user', usersRouter);
 
 var Users = require('./models/users');
-passport.use(new LocalStrategy(Users.authenticate()));
-passport.serializeUser(Users.serializeUser());
-passport.deserializeUser(Users.deserializeUser());
+// passport.use(new LocalStrategy(Users.authenticate()));
+// passport.serializeUser(Users.serializeUser());
+// passport.deserializeUser(Users.deserializeUser());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
