@@ -11,14 +11,14 @@ class usersService {
       },
       "name",
       function(err, existingAccount) {
-        if (existingAccount === null) {
+        if (!existingAccount) {
           var newAccount = new Users({
             email: signupFormData.email,
             name: signupFormData.name,
             password: signupFormData.password
           });
           newAccount.save().then(() => {
-            callback(null, "Registered");
+            callback(null, "User registered. Please log in.");
           });
           return;
         } else {
@@ -29,39 +29,6 @@ class usersService {
     );
   }
 
-  static login(loginFormData, callback) {
-    Users.findOne(
-      {
-        email: loginFormData.email
-      },
-      { password: 1, email: 1 },
-      function(err, account) {
-        if (account === null) {
-          var result = "Email not registered";
-          callback(null, result);
-          return;
-        } else if (
-          account.password === loginFormData.password &&
-          account.email === loginFormData.email
-        ) {
-          var result = "login success";
-          callback(null, result);
-          return;
-        } else if (
-          account.password != loginFormData.password &&
-          account.email === loginFormData.email
-        ) {
-          var result = "incorrect password";
-          callback(null, result);
-          return;
-        } else {
-          var result = "authentication error";
-          callback(null, result);
-          return;
-        }
-      }
-    );
-  }
 }
 
 exports.usersService = usersService;
