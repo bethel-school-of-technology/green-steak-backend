@@ -16,15 +16,15 @@ passport.use(
       .then(user => {
         if (!user) {
           return done(null, false, {
-            message: "Email not registered."
+            message: "Email not registered"
           });
         }
         if (user.password != password) {
           return done(null, false, {
-            message: "Incorrect password."
+            message: "Incorrect password"
           });
         }
-        return done(null, user, { message: "Welcome" });
+        return done(null, user, { message: "Welcome " });
       })
       .catch(err => {
         if (err) {

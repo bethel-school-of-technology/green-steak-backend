@@ -20,7 +20,7 @@ router.post("/login", (req, res, next) => {
         return next(err);
       }
       if (!user) {
-        return res.send(info);
+        return res.send({ message: info.message, user: { name: ''}});
       }
       if (user) {
         return res.send({
