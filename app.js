@@ -6,14 +6,19 @@ var logger = require('morgan');
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
 
 const MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
+
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
 
 //TO CONNECT MONGODB 
 const uri = process.env.DB_URI
+mongoose.set('useCreateIndex', true);
 mongoose.connect(uri, {dbName: process.env.DB_NAME, useNewUrlParser: true});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -37,7 +42,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(require('express-session')({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/api', indexRouter);
+app.use('/user', usersRouter);
+
+var Users = require('./models/users');
+// passport.use(new LocalStrategy(Users.authenticate()));
+// passport.serializeUser(Users.serializeUser());
+// passport.deserializeUser(Users.deserializeUser());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

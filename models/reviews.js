@@ -16,6 +16,6 @@ var reviewSchema = new Schema({
   }
 });
 
-var Reviews = mongoose.model("reviews", reviewSchema, "reviews");
+var Reviews = mongoose.model("review", reviewSchema);
 
 module.exports = Reviews
