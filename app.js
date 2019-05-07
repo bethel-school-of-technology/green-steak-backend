@@ -32,7 +32,7 @@ app.set('view engine', 'jade');
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
 
@@ -43,10 +43,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(require('express-session')({
-  secret: process.env.SECRET
+  secret: process.env.EXPRESS_SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
 }));
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 app.use('/api', indexRouter);
 app.use('/user', usersRouter);
