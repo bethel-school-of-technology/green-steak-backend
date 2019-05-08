@@ -7,7 +7,8 @@ var steakhouseSchema = new Schema({
   coordinates: {
     latitude: String,
     longitude: String
-  }
+  },
+  address: String
 });
 
 var Steakhouses = mongoose.model("steakhouses", steakhouseSchema, "steakhouses");

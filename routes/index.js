@@ -11,13 +11,6 @@ router.get("/steakhouses", function(req, res, next) {
   });
 });
 
-router.post("/googlemapsapiupload", function(req, res, next) {
-  var googleData = req.body;
-  steakhousesService.addGoogleData(googleData, function(err) {
-    res.send("success, saving in progress");
-  });
-});
-
 router.post("/submitreview", function(req, res, next) {
   var formData = req.body;
   reviewsService.submitReview(formData, function(err) {
