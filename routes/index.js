@@ -1,9 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-var steakhousesService = require("../services/steakhouses")
-  .steakhousesService;
-var reviewsService = require("../services/reviews").reviewsService;
+var steakhousesService = require("../services/steakhouses");
+var reviewsService = require("../services/reviews");
 
 router.get("/steakhouses", function(req, res, next) {
   steakhousesService.findAll(function(err, steakhouses) {

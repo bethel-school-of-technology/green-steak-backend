@@ -13,4 +13,4 @@ class steakhousesService {
 
 };
 
-exports.steakhousesService = steakhousesService;
+module.exports = steakhousesService

@@ -11,6 +11,6 @@ var steakhouseSchema = new Schema({
   address: String
 });
 
-var Steakhouses = mongoose.model("steakhouses", steakhouseSchema, "steakhouses");
+var Steakhouses = mongoose.model("steakhouse", steakhouseSchema);
 
 module.exports = Steakhouses
