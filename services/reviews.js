@@ -48,4 +48,4 @@ class reviewsService {
   }
 }
 
-exports.reviewsService = reviewsService;
+module.exports = reviewsService
