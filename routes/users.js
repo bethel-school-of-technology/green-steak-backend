@@ -2,34 +2,71 @@ var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
 const passport = require("passport");
-const connectEnsue = require("connect-ensure-login");
-var usersService = require("../services/users").usersService;
+const jwt = require("jsonwebtoken");
 
-router.post("/register", function(req, res, next) {
-  var formdata = req.body;
-  usersService.signup(formdata, function(err, result) {
-    res.send(result);
-  });
+router.post("/register", (req, res, next) => {
+  passport.authenticate("register", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      res.send({ message: info.message, name: "" });
+    } else {
+      req.logIn(user, function(err) {
+        if (err) {
+          return next(err);
+        }
+      });
+      const token = jwt.sign({ id: user.email }, process.env.JWT_SECRET, {
+        expiresIn: "1d"
+      });
+      return res.send({
+        token: token,
+        message: info.message,
+        name: user.name
+      });
+    }
+  })(req, res, next);
 });
 
 router.post("/login", (req, res, next) => {
-  passport.authenticate(
-    "local",
-    (err, user, info) => {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res.send({ message: info.message, user: { name: ''}});
-      }
-      if (user) {
-        return res.send({
-          message: info.message,
-          user: { id: user._id, name: user.name }
-        });
-      }
+  passport.authenticate("login", (err, user, info) => {
+    if (err) {
+      return next(err);
     }
-  )(req, res, next);
+    if (!user) {
+      return res.send({ message: info.message, name: "" });
+    }
+    if (user) {
+      req.logIn(user, function(err) {
+        if (err) {
+          return next(err);
+        }
+      });
+      const token = jwt.sign({ id: user.email }, process.env.JWT_SECRET, {
+        expiresIn: "1d"
+      });
+      return res.send({
+        token: token,
+        message: info.message,
+        name: user.name
+      });
+    }
+  })(req, res, next);
+});
+
+router.get("/ensure", (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (info) {
+      console.log(info.message)
+      res.send({ loggedIn: false});
+    } else {
+      res.send({ loggedIn: true });
+    }
+  })(req, res, next);
 });
 
 module.exports = router;
