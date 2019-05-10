@@ -10,11 +10,17 @@ router.get("/steakhouses", function(req, res, next) {
   });
 });
 
-router.post("/submitreview", function(req, res, next) {
-  var formData = req.body;
-  reviewsService.submitReview(formData, function(err) {
+router.post("/reviews/submit", function(req, res, next) {
+  reviewsService.submitReview(req.body, function(err) {
     res.send("review saved")
   });
 });
+
+router.get("/reviews/recent/:id?", function(req, res, next) {
+  var steakhouse = req.params
+  reviewsService.findRecent(steakhouse, function(err, mostRecent) {
+    res.send(JSON.stringify(mostRecent))
+  })
+})
 
 module.exports = router;

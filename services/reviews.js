@@ -20,8 +20,7 @@ class reviewsService {
     return timestamp;
   }
 
-  static submitReview(rawFormData, callback) {
-    var formData = JSON.parse(rawFormData.review)
+  static submitReview(formData, callback) {
     var identifier = formData.identifier;
     var commentText = formData.comment;
     var user = formData.username;
@@ -29,10 +28,7 @@ class reviewsService {
     var ratingq = formData.quality;
     var now = this.createTimestamp();
     var reviewToSubmit = new Reviews({
-      identifier: {
-        latitude: identifier.latitude,
-        longitude: identifier.longitude
-      },
+      identifier: identifier,
       comment: commentText,
       username: user,
       value: ratingv,
@@ -46,6 +42,30 @@ class reviewsService {
     });
     callback(null);
   }
+
+  static findRecent(steakhouse, callback) {
+    if (steakhouse !== null) {
+      console.log("filtered");
+      Reviews.find(
+        {identifier: steakhouse.id},
+        null,
+        { sort: { "meta.timestamp": -1 }, limit: 10 },
+        function(err, mostRecent) {
+          callback(null, mostRecent);
+        }
+      );
+      return
+    }
+    console.log("no filter")
+    Reviews.find(
+      {},
+      null,
+      { sort: { "meta.timestamp": -1 }},
+      function(err, mostRecent) {
+        callback(null, mostRecent);
+      }
+    );
+  }
 }
 
-module.exports = reviewsService
+module.exports = reviewsService;
