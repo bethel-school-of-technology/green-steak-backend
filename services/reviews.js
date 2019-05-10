@@ -44,7 +44,8 @@ class reviewsService {
   }
 
   static findRecent(steakhouse, callback) {
-    if (steakhouse !== null) {
+    console.log(steakhouse)
+    if (steakhouse.id !== undefined) {
       console.log("filtered");
       Reviews.find(
         {identifier: steakhouse.id},
