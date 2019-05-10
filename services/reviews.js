@@ -50,7 +50,7 @@ class reviewsService {
       Reviews.find(
         {identifier: steakhouse.id},
         null,
-        { sort: { "meta.timestamp": -1 }, limit: 10 },
+        { sort: { "meta.timestamp": -1 } },
         function(err, mostRecent) {
           callback(null, mostRecent);
         }
@@ -61,7 +61,7 @@ class reviewsService {
     Reviews.find(
       {},
       null,
-      { sort: { "meta.timestamp": -1 }},
+      { sort: { "meta.timestamp": -1 }, limit: 10},
       function(err, mostRecent) {
         callback(null, mostRecent);
       }
