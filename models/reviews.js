@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var reviewSchema = new Schema({
   identifier: mongoose.Schema.Types.ObjectId,
   comment: String,
-  username: String,
+  user: mongoose.Schema.Types.ObjectId,
   value: Number,
   quality: Number,
   meta: {
