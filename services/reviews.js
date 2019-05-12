@@ -20,19 +20,19 @@ class reviewsService {
     return timestamp;
   }
 
-  static submitReview(formData, callback) {
+  static submitReview(formData, user, callback) {
     var identifier = formData.identifier;
     var commentText = formData.comment;
-    var user = formData.username;
-    var ratingv = formData.value;
-    var ratingq = formData.quality;
+    var user = user._id;
+    var value = formData.ratePrice;
+    var quality = formData.rateQuality;
     var now = this.createTimestamp();
     var reviewToSubmit = new Reviews({
       identifier: identifier,
       comment: commentText,
-      username: user,
-      value: ratingv,
-      quality: ratingq,
+      user: user,
+      value: value,
+      quality: quality,
       meta: {
         timestamp: now
       }
