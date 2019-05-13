@@ -1,6 +1,7 @@
 "use strict";
 var mongoose = require("mongoose");
 var Reviews = require("../models/reviews");
+var Steakhouses = require("../models/steakhouses")
 
 class reviewsService {
   static createTimestamp() {
@@ -49,12 +50,23 @@ class reviewsService {
       console.log("filtered");
       Reviews.find(
         {identifier: steakhouse.id},
-        null,
+        {identifier: 0},
         { sort: { "meta.timestamp": -1 } },
         function(err, mostRecent) {
-          callback(null, mostRecent);
+          var reviews = mostRecent
+          // console.log(reviews)
+          return reviews
         }
-      );
+      ).then((reviews) => {
+        Steakhouses.findOne(
+          {_id: steakhouse.id},
+          {name: 1, address: 1},
+          function(err, steakhouseInfo) {
+            var steakhouse = steakhouseInfo
+            callback(null, reviews, steakhouse)
+          }
+        )
+      })
       return
     }
     console.log("no filter")
@@ -63,7 +75,7 @@ class reviewsService {
       null,
       { sort: { "meta.timestamp": -1 }, limit: 10},
       function(err, mostRecent) {
-        callback(null, mostRecent);
+        callback(null, mostRecent, null);
       }
     );
   }
