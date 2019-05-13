@@ -3,6 +3,8 @@ var router = express.Router();
 var mongoose = require("mongoose");
 var steakhousesService = require("../services/steakhouses");
 var reviewsService = require("../services/reviews");
+const passport = require("passport");
+
 
 router.get("/steakhouses", function(req, res, next) {
   steakhousesService.findAll(function(err, steakhouses) {
@@ -10,10 +12,18 @@ router.get("/steakhouses", function(req, res, next) {
   });
 });
 
-router.post("/submitreview", function(req, res, next) {
-  var formData = req.body;
-  reviewsService.submitReview(formData, function(err) {
-    res.send("review saved")
+router.post("/reviews/submit", (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user, info) => {
+    reviewsService.submitReview(req.body, user, function(err) {
+      res.send({ message: "review saved" });
+    });
+  })(req, res, next);
+});
+
+router.get("/reviews/recent/:id?", function(req, res, next) {
+  var steakhouse = req.params;
+  reviewsService.findRecent(steakhouse, function(err, mostRecent) {
+    res.send(JSON.stringify(mostRecent));
   });
 });
 

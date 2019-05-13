@@ -3,12 +3,9 @@ var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 var reviewSchema = new Schema({
-  identifier: {
-    latitude: String,
-    longitude: String
-  },
+  identifier: mongoose.Schema.Types.ObjectId,
   comment: String,
-  username: String,
+  user: mongoose.Schema.Types.ObjectId,
   value: Number,
   quality: Number,
   meta: {
