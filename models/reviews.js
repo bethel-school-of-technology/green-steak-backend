@@ -3,9 +3,15 @@ var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 var reviewSchema = new Schema({
-  identifier: mongoose.Schema.Types.ObjectId,
+  identifier: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'steakhouse'
+  },
   comment: String,
-  user: mongoose.Schema.Types.ObjectId,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  },
   value: Number,
   quality: Number,
   meta: {
@@ -15,4 +21,4 @@ var reviewSchema = new Schema({
 
 var Reviews = mongoose.model("review", reviewSchema);
 
-module.exports = Reviews
+module.exports = Reviews;
