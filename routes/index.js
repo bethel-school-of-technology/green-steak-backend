@@ -13,9 +13,20 @@ router.get("/steakhouses", function(req, res, next) {
 
 router.post("/reviews/submit", (req, res, next) => {
   passport.authenticate("jwt", { session: false }, (err, user, info) => {
-    reviewsService.submitReview(req.body, user, function(err) {
-      res.send({ message: "review saved" });
-    });
+    if (err) {
+      return next(err);
+    }
+    if (info) {
+      res.send({ message: info.message });
+    } else {
+      reviewsService.submitReview(req.body, user, function(err, prob) {
+        if (prob) {
+          res.send({ message: prob });
+        } else {
+          res.send({ message: "review saved" });
+        }
+      });
+    }
   })(req, res, next);
 });
 
