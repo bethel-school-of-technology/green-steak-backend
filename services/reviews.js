@@ -22,26 +22,47 @@ class reviewsService {
   }
 
   static submitReview(formData, user, callback) {
-    var identifier = formData.identifier;
-    var commentText = formData.comment;
-    var user = user._id;
-    var value = formData.ratePrice;
-    var quality = formData.rateQuality;
-    var now = this.createTimestamp();
-    var reviewToSubmit = new Reviews({
-      identifier: identifier,
-      comment: commentText,
-      user: user,
-      value: value,
-      quality: quality,
-      meta: {
-        timestamp: now
-      }
-    });
-    reviewToSubmit.save(function(err) {
-      console.log("Review saved");
-    });
-    callback(null);
+    if (
+      formData.identifier &&
+      formData.comment &&
+      formData.ratePrice &&
+      formData.rateQuality &&
+      user
+    ) {
+      Steakhouses.findOne(
+        {
+          _id: formData.identifier
+        },
+        {
+          _id: 1
+        }
+      ).then(steakhouseExists => {
+        if (!steakhouseExists) {
+          callback(
+            null,
+            "Invalid Steakhouse, please reselect a steakhouse and try again."
+          );
+        } else {
+          var now = this.createTimestamp();
+          var reviewToSubmit = new Reviews({
+            identifier: formData.identifier,
+            comment: formData.comment,
+            user: user._id,
+            value: formData.ratePrice,
+            quality: formData.rateQuality,
+            meta: {
+              timestamp: now
+            }
+          });
+          reviewToSubmit.save(function(err) {
+            console.log("Review saved");
+          });
+          callback(null);
+        }
+      });
+    } else {
+      callback(null, "Missing fields.");
+    }
   }
 
   static findRecent(steakhouse, callback) {
