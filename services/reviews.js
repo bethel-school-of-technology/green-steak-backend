@@ -1,7 +1,7 @@
 "use strict";
 var mongoose = require("mongoose");
 var Reviews = require("../models/reviews");
-var Steakhouses = require("../models/steakhouses")
+var Steakhouses = require("../models/steakhouses");
 
 class reviewsService {
   static createTimestamp() {
@@ -45,40 +45,47 @@ class reviewsService {
   }
 
   static findRecent(steakhouse, callback) {
-    console.log(steakhouse)
     if (steakhouse.id !== undefined) {
-      console.log("filtered");
-      Reviews.find(
-        {identifier: steakhouse.id},
-        {identifier: 0},
-        { sort: { "meta.timestamp": -1 } },
-        function(err, mostRecent) {
-          var reviews = mostRecent
-          // console.log(reviews)
-          return reviews
-        }
-      ).then((reviews) => {
-        Steakhouses.findOne(
-          {_id: steakhouse.id},
-          {name: 1, address: 1},
-          function(err, steakhouseInfo) {
-            var steakhouse = steakhouseInfo
-            callback(null, reviews, steakhouse)
-          }
+      Steakhouses.findOne(
+        { _id: steakhouse.id },
+        { name: 1, address: 1 }
+      ).then((steakhouse) => { 
+        if (!steakhouse) {
+          callback(
+            null,
+            "Invalid Steakhouse, please reselect a steakhouse and try again."
+          );
+        } else {
+        Reviews.find(
+          { identifier: steakhouse.id },
+          { identifier: 0 },
+          { sort: { "meta.timestamp": -1 } }
         )
+          .populate({
+            path: "user",
+            select: "name"
+          })
+          .then((reviews) => {
+            callback(null, reviews, steakhouse);
+          })
+        }
       })
-      return
-    }
-    console.log("no filter")
+    } else {
     Reviews.find(
       {},
       null,
-      { sort: { "meta.timestamp": -1 }, limit: 10},
-      function(err, mostRecent) {
-        callback(null, mostRecent, null);
-      }
-    );
-  }
+      { sort: { "meta.timestamp": -1 }, limit: 10 }
+    )
+      .populate({
+        path: "identifier",
+        select: "name"
+      })
+      .populate({
+        path: "user",
+        select: "name"
+      })
+      .then(mostRecent => callback(null, mostRecent, null));
+  }}
 }
 
 module.exports = reviewsService;

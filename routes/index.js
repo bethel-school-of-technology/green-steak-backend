@@ -25,10 +25,10 @@ router.get("/reviews/recent/:id?", function(req, res, next) {
     console.log({
       review: mostRecent,
       steakhouse: steakhouse
-    })
+    });
     res.send({
-      "review": mostRecent,
-      "steakhouse": steakhouse
+      review: mostRecent,
+      steakhouse: steakhouse
     });
   });
 });
