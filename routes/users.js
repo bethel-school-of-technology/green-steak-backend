@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-var mongoose = require("mongoose");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
@@ -61,7 +60,6 @@ router.get("/ensure", (req, res, next) => {
       return next(err);
     }
     if (info) {
-      console.log(info.message)
       res.send({ loggedIn: false});
     } else {
       res.send({ loggedIn: true });

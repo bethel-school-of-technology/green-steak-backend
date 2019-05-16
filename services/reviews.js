@@ -1,5 +1,5 @@
 "use strict";
-var mongoose = require("mongoose");
+var ObjectId = require("mongoose").Types.ObjectId;
 var Reviews = require("../models/reviews");
 var Steakhouses = require("../models/steakhouses");
 
@@ -36,30 +36,34 @@ class reviewsService {
         {
           _id: 1
         }
-      ).then(steakhouseExists => {
-        if (!steakhouseExists) {
-          callback(
-            null,
-            "Invalid Steakhouse, please reselect a steakhouse and try again."
-          );
-        } else {
-          var now = this.createTimestamp();
-          var reviewToSubmit = new Reviews({
-            identifier: formData.identifier,
-            comment: formData.comment,
-            user: user._id,
-            value: formData.ratePrice,
-            quality: formData.rateQuality,
-            meta: {
-              timestamp: now
-            }
-          });
-          reviewToSubmit.save(function(err) {
-            console.log("Review saved");
-          });
-          callback(null);
-        }
-      });
+      )
+        .then(steakhouseExists => {
+          if (!steakhouseExists) {
+            callback(
+              null,
+              "Invalid Steakhouse, please reselect a steakhouse and try again."
+            );
+          } else {
+            var now = this.createTimestamp();
+            var reviewToSubmit = new Reviews({
+              identifier: formData.identifier,
+              comment: formData.comment,
+              user: user._id,
+              value: formData.ratePrice,
+              quality: formData.rateQuality,
+              meta: {
+                timestamp: now
+              }
+            });
+            reviewToSubmit.save(function(err) {});
+            callback(null);
+          }
+        })
+        .catch(err => {
+          if (err) {
+            callback(err);
+          }
+        });
     } else {
       callback(null, "Missing fields.");
     }
@@ -67,46 +71,65 @@ class reviewsService {
 
   static findRecent(steakhouse, callback) {
     if (steakhouse.id !== undefined) {
-      Steakhouses.findOne(
-        { _id: steakhouse.id },
-        { name: 1, address: 1 }
-      ).then((steakhouse) => { 
-        if (!steakhouse) {
-          callback(
-            null,
-            "Invalid Steakhouse, please reselect a steakhouse and try again."
-          );
-        } else {
-        Reviews.find(
-          { identifier: steakhouse.id },
-          { identifier: 0 },
-          { sort: { "meta.timestamp": -1 } }
-        )
-          .populate({
-            path: "user",
-            select: "name"
+      if (ObjectId.isValid(steakhouse.id)) {
+        Steakhouses.findOne({ _id: steakhouse.id }, { name: 1, address: 1 })
+          .then(steakhouse => {
+            if (!steakhouse) {
+              callback(
+                null,
+                "Invalid Steakhouse, please reselect a steakhouse and try again."
+              );
+            } else {
+              Reviews.find(
+                { identifier: steakhouse.id },
+                { identifier: 0 },
+                { sort: { "meta.timestamp": -1 } }
+              )
+                .populate({
+                  path: "user",
+                  select: "name"
+                })
+                .then(reviews => {
+                  callback(null, reviews, steakhouse);
+                })
+                .catch(err => {
+                  if (err) {
+                    callback(err);
+                  }
+                });
+            }
           })
-          .then((reviews) => {
-            callback(null, reviews, steakhouse);
-          })
-        }
-      })
+          .catch(err => {
+            if (err) {
+              return callback(err);
+            }
+          });
+      } else {
+        callback(
+          null,
+          "Invalid Steakhouse, please reselect a steakhouse and try again."
+        );
+      }
     } else {
-    Reviews.find(
-      {},
-      null,
-      { sort: { "meta.timestamp": -1 }, limit: 10 }
-    )
-      .populate({
-        path: "identifier",
-        select: "name"
-      })
-      .populate({
-        path: "user",
-        select: "name"
-      })
-      .then(mostRecent => callback(null, mostRecent, null));
-  }}
+      Reviews.find({}, null, { sort: { "meta.timestamp": -1 }, limit: 10 })
+        .populate({
+          path: "identifier",
+          select: "name"
+        })
+        .populate({
+          path: "user",
+          select: "name"
+        })
+        .then(mostRecent => {
+          callback(null, mostRecent, null);
+        })
+        .catch(err => {
+          if (err) {
+            return callback(err);
+          }
+        });
+    }
+  }
 }
 
 module.exports = reviewsService;
