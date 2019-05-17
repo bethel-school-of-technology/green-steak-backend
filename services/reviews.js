@@ -29,41 +29,48 @@ class reviewsService {
       formData.rateQuality &&
       user
     ) {
-      Steakhouses.findOne(
-        {
-          _id: formData.identifier
-        },
-        {
-          _id: 1
-        }
-      )
-        .then(steakhouseExists => {
-          if (!steakhouseExists) {
-            callback(
-              null,
-              "Invalid Steakhouse, please reselect a steakhouse and try again."
-            );
-          } else {
-            var now = this.createTimestamp();
-            var reviewToSubmit = new Reviews({
-              identifier: formData.identifier,
-              comment: formData.comment,
-              user: user._id,
-              value: formData.ratePrice,
-              quality: formData.rateQuality,
-              meta: {
-                timestamp: now
-              }
-            });
-            reviewToSubmit.save(function(err) {});
-            callback(null);
+      if (ObjectId.isValid(formData.identifier.id)) {
+        Steakhouses.findOne(
+          {
+            _id: formData.identifier
+          },
+          {
+            _id: 1
           }
-        })
-        .catch(err => {
-          if (err) {
-            callback(err);
-          }
-        });
+        )
+          .then(steakhouseExists => {
+            if (!steakhouseExists) {
+              callback(
+                null,
+                "Invalid Steakhouse, please reselect a steakhouse and try again."
+              );
+            } else {
+              var now = this.createTimestamp();
+              var reviewToSubmit = new Reviews({
+                identifier: formData.identifier,
+                comment: formData.comment,
+                user: user._id,
+                value: formData.ratePrice,
+                quality: formData.rateQuality,
+                meta: {
+                  timestamp: now
+                }
+              });
+              reviewToSubmit.save(function(err) {});
+              callback(null);
+            }
+          })
+          .catch(err => {
+            if (err) {
+              callback(err);
+            }
+          });
+      } else {
+        callback(
+          null,
+          "Invalid Steakhouse, please reselect a steakhouse and try again."
+        );
+      }
     } else {
       callback(null, "Missing fields.");
     }
@@ -90,7 +97,7 @@ class reviewsService {
                   select: "name"
                 })
                 .then(reviews => {
-                  callback(null, reviews, steakhouse);
+                  callback(null, null, reviews, steakhouse);
                 })
                 .catch(err => {
                   if (err) {
@@ -107,7 +114,7 @@ class reviewsService {
       } else {
         callback(
           null,
-          "Invalid Steakhouse, please reselect a steakhouse and try again."
+          "Invalid Steakhouse."
         );
       }
     } else {
@@ -121,7 +128,7 @@ class reviewsService {
           select: "name"
         })
         .then(mostRecent => {
-          callback(null, mostRecent, null);
+          callback(null, null, mostRecent, null);
         })
         .catch(err => {
           if (err) {
