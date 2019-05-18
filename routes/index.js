@@ -38,9 +38,19 @@ router.post("/reviews/submit", (req, res, next) => {
 
 router.get("/reviews/recent/:id?", function(req, res, next) {
   var steakhouse = req.params;
-  reviewsService.findRecent(steakhouse, function(err, mostRecent, steakhouse) {
+  reviewsService.findRecent(steakhouse, function(
+    err,
+    prob,
+    mostRecent,
+    steakhouse
+  ) {
     if (err) {
       next(err);
+    }
+    if (prob) {
+      res.send({
+        message: prob
+      });
     } else {
       res.send({
         review: mostRecent,
