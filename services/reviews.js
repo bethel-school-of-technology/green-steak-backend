@@ -29,7 +29,7 @@ class reviewsService {
       formData.rateQuality &&
       user
     ) {
-      if (ObjectId.isValid(formData.identifier.id)) {
+      if (ObjectId.isValid(formData.identifier)) {
         Steakhouses.findOne(
           {
             _id: formData.identifier
