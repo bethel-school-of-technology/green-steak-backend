@@ -11,7 +11,6 @@ var usersRouter = require('./routes/users');
 
 require('./config/passport.js');
 
-const MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 
 var app = express();
@@ -42,13 +41,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(require('express-session')({
-  secret: process.env.EXPRESS_SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-}));
 app.use(passport.initialize());
-// app.use(passport.session());
 
 app.use('/api', indexRouter);
 app.use('/user', usersRouter);
