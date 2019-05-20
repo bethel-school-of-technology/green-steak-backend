@@ -22,29 +22,17 @@ passport.use(
           if (user) {
             return done(null, false, { message: "Email already registered" });
           } else {
-            var validationerrors = null;
-            if (emailValid.test(email) == false) {
-              validationerrors = "Email is not valid.\n";
+            if (nameValid.test(req.body.name) == false) {
+              return done(null, false, { message: "Name is not valid" });
             }
             if (passwordSecure.test(password) == false) {
-              if (validationerrors) {
-                validationerrors =
-                  validationerrors +
-                  "Password must be between 6-18 characters and contain at least 1 of each ot the following: a capital letter, a lowercase letter, a number, and a special character.\n";
-              } else {
-                validationerrors =
-                  "Password must be between 6-18 characters and contain at least 1 of each ot the following: a capital letter, a lowercase letter, a number, and a special character.\n";
-              }
+              return done(null, false, {
+                message:
+                  "Password must be between 6-18 characters and contain at least 1 of each of the following: a capital letter, a lowercase letter, a number, and a special character"
+              });
             }
-            if (nameValid.test(req.body.name) == false) {
-              if (validationerrors) {
-                validationerrors = validationerrors + "Name is not valid.\n";
-              } else {
-                validationerrors = "Name is not valid.\n";
-              }
-            }
-            if (validationerrors) {
-              return done(null, false, { message: validationerrors });
+            if (emailValid.test(email) == false) {
+              return done(null, false, { message: "Email is not valid" });
             } else {
               bcrypt
                 .hash(password, BCRYPT_SALT_ROUNDS)

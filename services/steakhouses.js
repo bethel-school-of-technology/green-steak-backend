@@ -1,5 +1,4 @@
 "use strict";
-var mongoose = require("mongoose");
 var Steakhouses = require("../models/steakhouses");
 
 class steakhousesService {
